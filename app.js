@@ -4,7 +4,8 @@ var express = require( 'express' ),
 	io = sio.listen( app ),
 	scripts = '', styles = '',
 	prod_scripts, dev_scripts,
-	prod_css, dev_css;
+	prod_css, dev_css,
+	sprites = {};
 
 // Configuration
 
@@ -19,23 +20,59 @@ app.configure( function(){
 });
 
 io.sockets.on( 'connection', function( socket ) {
-	console.log( 'connected' );
+
+	// socket.on( 'connected', function() { 
+		console.log( 'sending list of sprites' );
+		console.log( sprites );
+		var sprite;
+		for ( sprite in sprites ) {
+			if ( sprites.hasOwnProperty( sprite ) ) {
+				if ( socket.id !== sprite ) {
+					io.sockets.emit( 'create', { id: socket.id, sprite: sprites[ sprite ] } );
+				}
+			}
+		}
+	// });
+
+	socket.on( 'created', function( data ) {
+		console.log( "Creating sprite" );
+		sprites[ socket.id ] = data
+
+		for ( sprite in sprites ) {
+			if ( sprites.hasOwnProperty( sprite ) ) {
+				if ( socket.id !== sprite ) {
+					io.sockets.emit( 'create', { id: socket.id, sprite: sprites[ sprite ] } );
+				}
+			}
+		}
+		console.log( sprites );
+	});
+
+	socket.on( 'disconnect', function( ) {
+		io.sockets.emit( 'delete', socket.id );
+		delete sprites[ socket.id ];
+	});
+
+	socket.on( 'move', function( data ) {
+		var s = sprites[ socket.id ];
+		console.log( "moving %s from x:%s, y:%s to x:%s, y:%s", socket.id, s.x, s.y, data.x, data.y );
+	});
 });
 
 prod_scripts = [
 	'http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js',
 	'/js/bootstrap.min.js',
 	'/socket.io/socket.io.js',
-	'/js/main.min.js',
 	'/js/bit.io.min.js',
+	'/js/main.min.js',
 ];
 
 dev_scripts = [
 	'http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js',
 	'/js/bootstrap.js',
 	'/socket.io/socket.io.js',
-	'/js/main.js',
 	'/js/bit.io.js',
+	'/js/main.js',
 ];
 
 prod_css = [
