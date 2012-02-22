@@ -1,6 +1,6 @@
 var socket = io.connect( ),
 canv, ctx, me, sprites = {},
-inc = 5;
+inc = 5, puller, game;
 
 function move( e ) {
 	var me = sprites[ 'me' ];
@@ -61,6 +61,8 @@ $( 'document' ).ready( function() {
 	window.addEventListener( 'keydown', move, true );
 
 	canv = $( '#canvas' );
+	puller = $( '#puller' );
+	game = $( '#game' );
 
 	ctx = canv.get(0).getContext("2d");
 
@@ -88,4 +90,26 @@ $( 'document' ).ready( function() {
 	});
 
 	setInterval( draw_sprites );
+
+	$( '.navbutton' ).each( function( idx, ele ) {
+		a = $( ele );
+
+		a.click( function() {
+			var t = $( this );
+
+			var showid = t.attr( 'id' ).replace( /-toggle/, '' );
+
+			$( '.navbutton' ).each( function() {
+				$( this ).parent().removeClass( 'active' );
+			});
+
+			$( '.page-content' ).each( function() {
+				$( this ).addClass( 'hidden' );
+			});
+
+			t.parent().addClass( 'active' );
+			$( '#' + showid ).removeClass( 'hidden' );
+		});
+	});
+
 });

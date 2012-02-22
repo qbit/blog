@@ -1,3 +1,57 @@
-<h1><%= title %></h1>
-<p>Welcome to asdf<p>
-<canvas id="canvas" height="<%= height %>" width="<%= width %>" style="border: 1px solid black;"></canvas>
+<div class="navbar navbar-fixed-top">
+  <div class="navbar-inner">
+	<div class="container">
+		<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+		</a>
+	  <a class="brand" href="#">Qbit.IO</a>
+	  <div class="nav-collapse">
+		<ul class="nav">
+		  <li class="active"><a class="navbutton" id="dots-toggle" href="#dots">Dots</a></li>
+		  <li><a class="navbutton" id="blog-toggle" href="#blog">Blog</a></li>
+		  <li><a class="navbutton" id="about-toggle" href="#about">About</a></li>
+		</ul>
+	  </div>
+	</div>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="hero-unit">
+	  <div id="dots" class="page-content well">
+		<canvas id="canvas" height="<%= height %>" width="<%= width %>" style=""></canvas>
+	  </div>
+	  <div id="blog" class="page-content hidden">
+		<% for(var i=0; i<blog.length; i++) {%>
+			<div class="well">
+				<div class="page-header">
+					<h3><%= blog[i].title %><small> <%= blog[i].date %></small></h3>
+				</div>
+				<div><%- blog[i].body %></div>
+			</div>
+		<% } %>
+	  </div>
+	  <div id="about" class="page-content hidden">
+		  <h3>About</h3>
+		  <p>My name is Aaron Bieber ( no relation ), I am a web developer who pretty much enjoys everything.</p>
+			<p>Stuff I do on the tubez:</p>
+			<a href="https://vimeo.com/user2685629"><img src="/images/glyphicons_324_vimeo.png"/></a>
+			<a href="http://www.linkedin.com/in/abieber"><img src="/images/glyphicons_337_linked_in.png"/></a>
+			<a href="https://plus.google.com/108155057102084949527/posts"><img src="/images/glyphicons_346_google_plus.png"/></a>
+			<a href="http://www.last.fm/user/qbit"><img src="/images/glyphicons_326_last_fm.png"/></a>
+			<a href="https://github.com/qbit"><img src="/images/glyphicons_341_github.png"/></a>
+			<a href="http://youtube.com/deftly"><img src="/images/glyphicons_342_youtube.png"/></a>
+
+	  </div>
+  </div>
+
+  <footer>
+	<div class="well" style="text-align: center; height: 140px;">
+		<p>&copy; <%= year %> Aaron Bieber - qbit.io<br /><%- coderwall %></p>
+	</div>
+  </footer>
+
+</div> 

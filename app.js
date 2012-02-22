@@ -1,6 +1,11 @@
 var express = require( 'express' ), 
 	app = module.exports = express.createServer(),
 	RedisStore = require('connect-redis')(express),
+	sqlite3 = require( 'sqlite3' ),
+	db_file = __dirname + '/blog.db',
+	db = new sqlite3.Database( db_file ),
+	fs = require( 'fs' ),
+	coderwall = require( 'coderwall' ),
 	sio = require( 'socket.io' ),
 	io = sio.listen( app ),
 	scripts = '', styles = '',
@@ -8,10 +13,13 @@ var express = require( 'express' ),
 	prod_css, dev_css,
 	width, height,
 	sprites = {},
+	blog = [],
 	sprite_count = 0;
+
 
 prod_scripts = [
 	'http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js',
+	'/coderwall/coderwall.js',
 	'/js/bootstrap.min.js',
 	'/socket.io/socket.io.js',
 	'/js/bit.io.min.js',
@@ -20,6 +28,7 @@ prod_scripts = [
 
 dev_scripts = [
 	'http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js',
+	'/coderwall/coderwall.js',
 	'/js/bootstrap.js',
 	'/socket.io/socket.io.js',
 	'/js/bit.io.js',
@@ -34,8 +43,23 @@ prod_css = [
 dev_css = [
 	'/css/bootstrap.css',
 	'/css/qbit.io.css',
+	'/coderwall/coderwall.css'
 ];
 
+fs.stat( db_file, function( err, stat ) {
+	if ( stat.size === 0 ) {
+		db.serialize( function() {
+			db.run( 'create table categories ( id integer primary key autoincrement, name text )' );
+			db.run( 'create table blog( id integer primary key autoincrement, title text, date timestamp, body text, categoryid integer )' );
+
+			console.log( "database created.." );
+		});
+	}
+});
+
+db.each( 'select * from blog join categories on ( categories.id = categoryid )', function( err, row ) {
+	blog.push( row );
+});
 
 function stringify( type, list ) {
 	var i, l, str = '';
@@ -52,6 +76,17 @@ function stringify( type, list ) {
 
 	return str;
 }
+
+var cw = new coderwall( {
+	user: 'qbit',
+	orientation: 'horizontal',
+	images: __dirname + '/public/images',
+	url: '/coderwall/'
+});
+
+cw.get();
+
+cw.connect( app );
 
 // Configuration
 app.configure( 'development', function(){
@@ -104,13 +139,7 @@ function rand( max ) {
 }
 
 io.sockets.on( 'connection', function( socket ) {
-	// on connect - create a new bit, and put it in the sprites obj
-	// then send the sprites obj to all clients
-	//
-	// receive updated sprite from client, 
-	// shove update into obj
-	// pass obj to client
-	// ;
+
 	sprites[ socket.id ] = {
 		x: rand( width ),
 		y: rand( height ),
@@ -137,15 +166,16 @@ io.sockets.on( 'connection', function( socket ) {
 	});
 });
 
-
-
-// Routes
+var date = new Date();
 
 app.get( '/', function( req, res ) {
 	res.render( 'index', { 
 		title: 'qbit.io - beta', 
+		year: date.getFullYear(),
+		blog: blog,
 		styles: styles, 
 		scripts: scripts, 
+		coderwall: cw.coderwall_element,
 		width: width, 
 		height: height 
 	} );
