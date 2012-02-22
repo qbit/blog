@@ -134,7 +134,7 @@ app.configure( function(){
 });
 
 width = 800;
-height = 600;
+height = 400;
 
 function rand( max ) {
 	return Math.ceil( Math.random() * max );
