@@ -66,7 +66,7 @@ function stringify( type, list ) {
 	for ( i = 0, l = list.length; i < l; i++ ) {
 		var line = list[i];
 		if ( type === 'css' ) {
-			str = str + '<link rel="stylesheet" href="' + line + '" type="text/stylesheet"/>\n';
+			str = str + '<link rel="stylesheet" href="' + line + '" type="text/css"/>\n';
 		}
 
 		if ( type === 'js' ) {
@@ -170,7 +170,7 @@ var date = new Date();
 
 app.get( '/', function( req, res ) {
 	res.render( 'index', { 
-		title: 'qbit.io - beta', 
+		title: 'qbit.io', 
 		year: date.getFullYear(),
 		blog: blog,
 		styles: styles, 
