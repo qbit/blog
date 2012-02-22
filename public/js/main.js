@@ -1,28 +1,91 @@
 var socket = io.connect( ),
-me, sprites = {};
+canv, ctx, me, sprites = {},
+inc = 5;
 
-socket.on( 'create', function( data ) {
-	var id = data.id;
-	var sprite = data.sprite;
+function move( e ) {
+	var me = sprites[ 'me' ];
+	switch( e.keyCode ) {
+		case 38:
+			if ( me.y -inc > 0 ) {
+				me.moveY( -inc );		
+			}
+			break;
 
-	sprites[ id ] = new Bit( {
-		canvas: 'canvas',
-		x: sprite.x,
-		y: sprite.y
-	});
+		case 40:
+			if ( me.y < canv.height() ) {
+				me.moveY( inc );
+			}
+			break;
 
-	// socket.emit( 'created', { x: sprite.x, y: sprite.y } ); 
-});
+		case 37:
+			if ( me.x - inc > 0 ) {
+				me.moveX( -inc );
+			}
 
-socket.on( 'delete', function( id ) {
-	delete sprites[ id ];
-})
+			break;
+
+		case 39: 
+			if ( me.x + inc < canv.width() ) {
+				me.moveX( inc );
+			}
+			break;
+	}
+}
+
+function draw_sprites() {
+	var s;
+
+	ctx.clearRect( 0, 0, canv.width(), canv.height() );
+	for ( s in sprites ) {
+		if ( sprites.hasOwnProperty( s ) ) {
+
+			var sprite = sprites[s];
+
+			ctx.beginPath();
+			ctx.arc( sprite.x, sprite.y, 10, 0, Math.PI*2, true );
+			ctx.closePath();
+
+			if ( sprite.color ) {
+				ctx.fillStyle = sprite.color;
+			} else {
+				ctx.fillStyle = 'black';
+			}
+
+			ctx.fill();
+		}
+	}
+}
 
 $( 'document' ).ready( function() {
-	var canv = $( '#canvas' );
-	me = new Bit( {
-		canvas: 'canvas',
-		x: Math.ceil( Math.random() * canv.width() ),
-		y: Math.ceil( Math.random() * canv.height() ),
+
+	window.addEventListener( 'keydown', move, true );
+
+	canv = $( '#canvas' );
+
+	ctx = canv.get(0).getContext("2d");
+
+	socket.on( 'my sprite', function( data ) {
+		sprites[ 'me' ] = new Bit({
+			color: 'orange',
+			x: data.x,
+			y: data.y,
+			id: data.id
+		});
 	});
+
+	socket.on( 'other sprite', function( data ) {
+		if ( data.id !== sprites[ 'me' ].id ) {
+			sprites[ data.id ] = new Bit( data );
+		}
+	});
+
+	socket.on( 'move', function( data ) {
+		$.extend( sprites[ data.id ], data );
+	});
+
+	socket.on( 'rm sprite', function( id ) {
+		delete sprites[ id ];
+	});
+
+	setInterval( draw_sprites, 100 );
 });

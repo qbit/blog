@@ -5,7 +5,9 @@ var express = require( 'express' ),
 	scripts = '', styles = '',
 	prod_scripts, dev_scripts,
 	prod_css, dev_css,
-	sprites = {};
+	width, height,
+	sprites = {},
+	sprite_count = 0;
 
 // Configuration
 
@@ -19,43 +21,46 @@ app.configure( function(){
   app.use( express.static( __dirname + '/public' ));
 });
 
+width = 800;
+height = 600;
+
+function rand( max ) {
+	return Math.ceil( Math.random() * max );
+}
+
 io.sockets.on( 'connection', function( socket ) {
+	console.log( 'connected' );
+	// on connect - create a new bit, and put it in the sprites obj
+	// then send the sprites obj to all clients
+	//
+	// receive updated sprite from client, 
+	// shove update into obj
+	// pass obj to client
+	// ;
+	sprites[ socket.id ] = {
+		x: rand( width ),
+		y: rand( height ),
+		id: socket.id 
+	};
 
-	// socket.on( 'connected', function() { 
-		console.log( 'sending list of sprites' );
-		console.log( sprites );
-		var sprite;
-		for ( sprite in sprites ) {
-			if ( sprites.hasOwnProperty( sprite ) ) {
-				if ( socket.id !== sprite ) {
-					io.sockets.emit( 'create', { id: socket.id, sprite: sprites[ sprite ] } );
-				}
-			}
+	socket.emit( 'my sprite', sprites[ socket.id ] );
+
+	var s;
+	for ( s in sprites ) {
+		if ( sprites.hasOwnProperty( s ) ) {
+			io.sockets.emit( 'other sprite', sprites[ s ] );
 		}
-	// });
+	}
 
-	socket.on( 'created', function( data ) {
-		console.log( "Creating sprite" );
-		sprites[ socket.id ] = data
-
-		for ( sprite in sprites ) {
-			if ( sprites.hasOwnProperty( sprite ) ) {
-				if ( socket.id !== sprite ) {
-					io.sockets.emit( 'create', { id: socket.id, sprite: sprites[ sprite ] } );
-				}
-			}
-		}
-		console.log( sprites );
+	socket.on( 'move sprite', function( data ) {
+		sprites[ socket.id ] = data;
+		io.sockets.emit( 'move', data );
 	});
 
-	socket.on( 'disconnect', function( ) {
-		io.sockets.emit( 'delete', socket.id );
+	socket.on( 'disconnect', function() {
+		console.log( "removing sprite" );
+		io.sockets.emit( 'rm sprite', socket.id );
 		delete sprites[ socket.id ];
-	});
-
-	socket.on( 'move', function( data ) {
-		var s = sprites[ socket.id ];
-		console.log( "moving %s from x:%s, y:%s to x:%s, y:%s", socket.id, s.x, s.y, data.x, data.y );
 	});
 });
 
@@ -118,7 +123,13 @@ app.configure( 'production', function(){
 // Routes
 
 app.get( '/', function( req, res ) {
-	res.render( 'index', { title: 'asdf', styles: styles, scripts: scripts } );
+	res.render( 'index', { 
+		title: 'asdf', 
+		styles: styles, 
+		scripts: scripts, 
+		width: width, 
+		height: height 
+	} );
 });
 
 app.listen( 3000 );
