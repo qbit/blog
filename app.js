@@ -93,7 +93,9 @@ app.configure( 'development', function(){
   app.use( express.errorHandler( { dumpExceptions: true, showStack: true } ));
 
   io.configure( 'development', function() {
-	  io.set( 'transports', ['websocket'] );
+	  io.set( 'transports', [
+		 'websocket',
+	  ] );
   });
 
   scripts = stringify( 'js', dev_scripts );
@@ -181,5 +183,5 @@ app.get( '/', function( req, res ) {
 	} );
 });
 
-app.listen( 3000 );
-console.log( "Express server listening on port %d in %s mode", app.address().port, app.settings.env );
+//app.listen( 3000, '127.0.0.1' );
+app.listen( 3000);
