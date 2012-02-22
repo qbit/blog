@@ -87,5 +87,5 @@ $( 'document' ).ready( function() {
 		delete sprites[ id ];
 	});
 
-	setInterval( draw_sprites, 100 );
+	setInterval( draw_sprites );
 });
