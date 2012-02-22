@@ -18,7 +18,7 @@ var express = require( 'express' ),
 
 
 prod_scripts = [
-	'http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js',
+	'/js/jquery.min.js',
 	'/coderwall/coderwall.js',
 	'/js/bootstrap.min.js',
 	'/socket.io/socket.io.js',
@@ -27,7 +27,7 @@ prod_scripts = [
 ];
 
 dev_scripts = [
-	'http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js',
+	'/js/jquery.js',
 	'/coderwall/coderwall.js',
 	'/js/bootstrap.js',
 	'/socket.io/socket.io.js',
