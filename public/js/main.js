@@ -3,32 +3,44 @@ canv, ctx, me, sprites = {},
 inc = 5, puller, game;
 
 function move( e ) {
+	/*
+		j       74                                                                                  
+		down    40                                                                                  
+																									
+		k       75                                                                                  
+		up      38                                                                                  
+																									
+		h       72                                                                                  
+		left    37                                                                                  
+																									
+		l       76                                                                                  
+		right   39
+	*/
+
 	var me = sprites[ 'me' ];
-	switch( e.keyCode ) {
-		case 38:
-			if ( me.y -inc > 0 ) {
-				me.moveY( -inc );		
-			}
-			break;
 
-		case 40:
-			if ( me.y < canv.height() ) {
-				me.moveY( inc );
-			}
-			break;
+	if ( e.keyCode === 75 || e.keyCode === 38 ) {
+		if ( me.y -inc > 0 ) {
+			me.moveY( -inc );		
+		}
+	}
 
-		case 37:
+	if ( e.keyCode === 74 || e.keyCode === 40 ) {
+		if ( me.y < canv.height() ) {
+			me.moveY( inc );
+		}
+	}
+
+	if ( e.keyCode === 72 || e.keyCode === 37 ) {
 			if ( me.x - inc > 0 ) {
 				me.moveX( -inc );
 			}
+	}
 
-			break;
-
-		case 39: 
-			if ( me.x + inc < canv.width() ) {
-				me.moveX( inc );
-			}
-			break;
+	if ( e.keyCode === 76 || e.keyCode === 39 ) {
+		if ( me.x + inc < canv.width() ) {
+			me.moveX( inc );
+		}
 	}
 }
 
@@ -76,7 +88,7 @@ $( 'document' ).ready( function() {
 	});
 
 	socket.on( 'other sprite', function( data ) {
-		if ( data.id !== sprites[ 'me' ].id ) {
+		if ( data && data.id !== sprites[ 'me' ].id ) {
 			sprites[ data.id ] = new Bit( data );
 		}
 	});
