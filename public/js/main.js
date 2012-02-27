@@ -5,39 +5,47 @@ inc = 5, puller, game;
 function move( e ) {
 	/*
 		j       74                                                                                  
+		s		83
 		down    40                                                                                  
 																									
 		k       75                                                                                  
+		w		87
 		up      38                                                                                  
 																									
 		h       72                                                                                  
+		a		65
 		left    37                                                                                  
 																									
 		l       76                                                                                  
+		d		68
 		right   39
 	*/
 
 	var me = sprites[ 'me' ];
 
-	if ( e.keyCode === 75 || e.keyCode === 38 ) {
+	if ( e.keyCode === 75 || e.keyCode === 38 || e.keyCode === 87 ) {
+		// UP
 		if ( me.y -inc > 0 ) {
 			me.moveY( -inc );		
 		}
 	}
 
-	if ( e.keyCode === 74 || e.keyCode === 40 ) {
+	if ( e.keyCode === 74 || e.keyCode === 40 || e.keyCode === 83 ) {
+		// DOWN
 		if ( me.y < canv.height() ) {
 			me.moveY( inc );
 		}
 	}
 
-	if ( e.keyCode === 72 || e.keyCode === 37 ) {
-			if ( me.x - inc > 0 ) {
-				me.moveX( -inc );
-			}
+	if ( e.keyCode === 72 || e.keyCode === 37 || e.keyCode === 65 ) {
+		// LEFT
+		if ( me.x - inc > 0 ) {
+			me.moveX( -inc );
+		}
 	}
 
-	if ( e.keyCode === 76 || e.keyCode === 39 ) {
+	if ( e.keyCode === 76 || e.keyCode === 39 || e.keyCode === 68 ) {
+		// RIGHT
 		if ( me.x + inc < canv.width() ) {
 			me.moveX( inc );
 		}
