@@ -2,6 +2,30 @@ var socket = io.connect( ),
 canv, ctx, me, sprites = {},
 inc = 5, puller, game;
 
+var right = {
+	76: true,
+	69: true,
+	39: true
+};
+
+var left = {
+	72: true,
+	65: true,
+	37: true
+};
+
+var up = {
+	75: true,
+	87: true,
+	38: true
+};
+
+var down = {
+	74: true,
+	83: true,
+	40: true
+};
+
 function pd( e ) {
 	if ( e.preventDefault ) {
 		e.preventDefault();
@@ -10,27 +34,10 @@ function pd( e ) {
 }
 
 function move( e ) {
-	/*
-		j       74                                                                                  
-		s		83
-		down    40                                                                                  
-																									
-		k       75                                                                                  
-		w		87
-		up      38                                                                                  
-																									
-		h       72                                                                                  
-		a		65
-		left    37                                                                                  
-																									
-		l       76                                                                                  
-		d		68
-		right   39
-	*/
 
 	var me = sprites[ 'me' ];
 
-	if ( e.keyCode === 75 || e.keyCode === 38 || e.keyCode === 87 ) {
+	if ( up[ e.keyCode ] ) {
 		// UP
 		if ( me.y -inc > 0 ) {
 			me.moveY( -inc );		
@@ -39,7 +46,7 @@ function move( e ) {
 		pd( e );
 	}
 
-	if ( e.keyCode === 74 || e.keyCode === 40 || e.keyCode === 83 ) {
+	if ( down[ e.keyCode ] ) {
 		// DOWN
 		if ( me.y < canv.height() ) {
 			me.moveY( inc );
@@ -48,7 +55,7 @@ function move( e ) {
 		pd( e );
 	}
 
-	if ( e.keyCode === 72 || e.keyCode === 37 || e.keyCode === 65 ) {
+	if ( left[ e.keyCode ] ) {
 		// LEFT
 		if ( me.x - inc > 0 ) {
 			me.moveX( -inc );
@@ -57,7 +64,7 @@ function move( e ) {
 		pd( e );
 	}
 
-	if ( e.keyCode === 76 || e.keyCode === 39 || e.keyCode === 68 ) {
+	if ( right[ e.keyCode] ) {
 		// RIGHT
 		if ( me.x + inc < canv.width() ) {
 			me.moveX( inc );
