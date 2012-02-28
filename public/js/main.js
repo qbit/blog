@@ -28,6 +28,9 @@ function move( e ) {
 		if ( me.y -inc > 0 ) {
 			me.moveY( -inc );		
 		}
+		if(e.preventDefault)
+			e.preventDefault();
+		e.returnValue = false;
 	}
 
 	if ( e.keyCode === 74 || e.keyCode === 40 || e.keyCode === 83 ) {
@@ -35,6 +38,9 @@ function move( e ) {
 		if ( me.y < canv.height() ) {
 			me.moveY( inc );
 		}
+		if(e.preventDefault)
+			e.preventDefault();
+		e.returnValue = false;
 	}
 
 	if ( e.keyCode === 72 || e.keyCode === 37 || e.keyCode === 65 ) {
@@ -42,6 +48,9 @@ function move( e ) {
 		if ( me.x - inc > 0 ) {
 			me.moveX( -inc );
 		}
+		if(e.preventDefault)
+			e.preventDefault();
+		e.returnValue = false;
 	}
 
 	if ( e.keyCode === 76 || e.keyCode === 39 || e.keyCode === 68 ) {
@@ -49,6 +58,9 @@ function move( e ) {
 		if ( me.x + inc < canv.width() ) {
 			me.moveX( inc );
 		}
+		if(e.preventDefault)
+			e.preventDefault();
+		e.returnValue = false;
 	}
 }
 
