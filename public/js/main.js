@@ -23,45 +23,51 @@ function move( e ) {
 
 	var me = sprites[ 'me' ];
 
-	if ( e.keyCode === 75 || e.keyCode === 38 || e.keyCode === 87 ) {
-		// UP
-		if ( me.y -inc > 0 ) {
-			me.moveY( -inc );		
-		}
-		if(e.preventDefault)
-			e.preventDefault();
-		e.returnValue = false;
-	}
+	switch( e.keyCode ) {
+		case 38:	// up
+		case 75:	// k
+		case 87: 	// w
+			if ( me.y -inc > 0 ) {
+				me.moveY( -inc );		
+			}
+			if(e.preventDefault)
+				e.preventDefault();
+			e.returnValue = false;
+			break;
 
-	if ( e.keyCode === 74 || e.keyCode === 40 || e.keyCode === 83 ) {
-		// DOWN
-		if ( me.y < canv.height() ) {
-			me.moveY( inc );
-		}
-		if(e.preventDefault)
-			e.preventDefault();
-		e.returnValue = false;
-	}
+		case 40:	// down
+		case 74:	// j
+		case 83:	// s
+			if ( me.y < canv.height() ) {
+				me.moveY( inc );
+			}
+			if(e.preventDefault)
+				e.preventDefault();
+			e.returnValue = false;
+			break;
 
-	if ( e.keyCode === 72 || e.keyCode === 37 || e.keyCode === 65 ) {
-		// LEFT
-		if ( me.x - inc > 0 ) {
-			me.moveX( -inc );
-		}
-		if(e.preventDefault)
-			e.preventDefault();
-		e.returnValue = false;
-	}
+		case 37:	// left
+		case 72:	// h
+		case 65:	// a
+			if ( me.x - inc > 0 ) {
+				me.moveX( -inc );
+			}
+			if(e.preventDefault)
+				e.preventDefault();
+			e.returnValue = false;
+			break;
 
-	if ( e.keyCode === 76 || e.keyCode === 39 || e.keyCode === 68 ) {
-		// RIGHT
-		if ( me.x + inc < canv.width() ) {
-			me.moveX( inc );
-		}
-		if(e.preventDefault)
-			e.preventDefault();
-		e.returnValue = false;
-	}
+		case 39:	// right
+		case 76:	// l
+		case 68:	// d
+			if ( me.x + inc < canv.width() ) {
+				me.moveX( inc );
+			}
+			if(e.preventDefault)
+				e.preventDefault();
+			e.returnValue = false;
+			break;
+	}	// switch(e.keyCode)
 }
 
 function draw_sprites() {
