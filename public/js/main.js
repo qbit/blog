@@ -4,7 +4,7 @@ inc = 5, puller, game;
 
 var right = {
 	76: true,
-	69: true,
+	68: true,
 	39: true
 };
 
