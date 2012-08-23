@@ -1,3 +1,4 @@
+'use strict';
 var express = require( 'express' ), 
 	app = module.exports = express.createServer(),
 	RedisStore = require('connect-redis')(express),
@@ -183,5 +184,5 @@ app.get( '/', function( req, res ) {
 	} );
 });
 
-//app.listen( 3000, '127.0.0.1' );
-app.listen( 3000);
+app.listen( 3000, '127.0.0.1' );
+//app.listen( 3000);

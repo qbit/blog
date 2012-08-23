@@ -131,7 +131,7 @@ $( 'document' ).ready( function() {
 		delete sprites[ id ];
 	});
 
-	setInterval( draw_sprites );
+	setInterval( draw_sprites, 1 );
 
 	$( '.navbutton' ).each( function( idx, ele ) {
 		a = $( ele );
