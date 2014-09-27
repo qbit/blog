@@ -6,7 +6,7 @@ var express = require( 'express' ),
 	db_file = __dirname + '/blog.db',
 	db = new sqlite3.Database( db_file ),
 	fs = require( 'fs' ),
-	coderwall = require( 'coderwall' ),
+	// coderwall = require( 'coderwall' ),
 	sio = require( 'socket.io' ),
 	io = sio.listen( app ),
 	scripts = '', styles = '',
@@ -20,7 +20,7 @@ var express = require( 'express' ),
 
 prod_scripts = [
 	'/js/jquery.min.js',
-	'/coderwall/coderwall.js',
+	// '/coderwall/coderwall.js',
 	'/js/bootstrap.min.js',
 	'/socket.io/socket.io.js',
 	'/js/bit.io.min.js',
@@ -29,7 +29,7 @@ prod_scripts = [
 
 dev_scripts = [
 	'/js/jquery.js',
-	'/coderwall/coderwall.js',
+	// '/coderwall/coderwall.js',
 	'/js/bootstrap.js',
 	'/socket.io/socket.io.js',
 	'/js/bit.io.js',
@@ -43,8 +43,8 @@ prod_css = [
 
 dev_css = [
 	'/css/bootstrap.css',
-	'/css/qbit.io.css',
-	'/coderwall/coderwall.css'
+	'/css/qbit.io.css'
+	// '/coderwall/coderwall.css'
 ];
 
 fs.stat( db_file, function( err, stat ) {
@@ -78,16 +78,16 @@ function stringify( type, list ) {
 	return str;
 }
 
-var cw = new coderwall( {
-	user: 'qbit',
-	orientation: 'horizontal',
-	images: __dirname + '/public/images',
-	url: '/coderwall/'
-});
+// var cw = new coderwall( {
+// 	user: 'qbit',
+// 	orientation: 'horizontal',
+// 	images: __dirname + '/public/images',
+// 	url: '/coderwall/'
+// });
 
-cw.get();
+// cw.get();
 
-cw.connect( app );
+// cw.connect( app );
 
 // Configuration
 app.configure( 'development', function(){
@@ -178,7 +178,7 @@ app.get( '/', function( req, res ) {
 		blog: blog,
 		styles: styles, 
 		scripts: scripts, 
-		coderwall: cw.coderwall_element,
+		// coderwall: cw.coderwall_element,
 		width: width, 
 		height: height 
 	} );
