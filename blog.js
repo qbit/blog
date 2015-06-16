@@ -129,8 +129,8 @@ app.configure( function(){
   app.use( express.bodyParser() );
   app.use( express.methodOverride() );
   app.use( express.cookieParser() );
-  app.use( express.session( { secret: 'ohlol', store: new RedisStore } ));
-  // app.use( express.session( { secret: 'ohlol' } ) );
+  //app.use( express.session( { secret: 'ohlol', store: new RedisStore } ));
+  app.use( express.session( { secret: 'ohlol' } ) );
   app.use( express.static( __dirname + '/public' ) );
 });
 
