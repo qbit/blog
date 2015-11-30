@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 'use strict';
 var express = require( 'express' ), 
 	app = module.exports = express.createServer(),
