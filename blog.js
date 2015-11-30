@@ -1,15 +1,21 @@
 #!/usr/bin/env node
+
 'use strict';
 var express = require( 'express' ), 
-	app = module.exports = express.createServer(),
-	RedisStore = require('connect-redis')(express),
+	app =  express(),
+	session = require('express-session'),
+	server = require('http').Server(app),
+	errorhandler = require('errorhandler'),
+	bodyParser = require('body-parser'),
+	methodOverride = require('method-override'),
+	cookieParser = require('cookie-parser'),
+	io = require('socket.io')(server),
+	RedisStore = require('connect-redis')(session),
 	sqlite3 = require( 'sqlite3' ),
 	db_file = __dirname + '/blog.db',
 	db = new sqlite3.Database( db_file ),
 	fs = require( 'fs' ),
 	// coderwall = require( 'coderwall' ),
-	sio = require( 'socket.io' ),
-	io = sio.listen( app ),
 	scripts = '', styles = '',
 	prod_scripts, dev_scripts,
 	prod_css, dev_css,
@@ -90,50 +96,17 @@ function stringify( type, list ) {
 
 // cw.connect( app );
 
-// Configuration
-app.configure( 'development', function(){
-  app.use( express.errorHandler( { dumpExceptions: true, showStack: true } ));
+app.use(errorhandler());
+app.set( 'views', __dirname + '/views' );
+app.set( 'view engine', 'ejs' );
+app.use( bodyParser() );
+app.use( methodOverride() );
+app.use( cookieParser() );
+app.use(session({ store: new RedisStore(), secret: 'this is public \o/' }));
+app.use( express.static( __dirname + '/public' ) );
 
-  io.configure( 'development', function() {
-	  io.set( 'transports', [
-		 'websocket',
-	  ] );
-  });
-
-  scripts = stringify( 'js', dev_scripts );
-  styles  = stringify( 'css', dev_css );
-});
-
-app.configure( 'production', function(){
-  app.use( express.errorHandler() );
-
-  io.configure( 'production', function() {
-	  io.enable( 'browser client etag' );
-	  io.set( 'log level', 1 );
-
-	  io.set( 'transports', [
-		 'websocket',
-		 'flashsocket',
-		 'htmlfile',
-		 'xhr-polling',
-		 'jsonp-polling'
-	  ]);
-  });
-
-  scripts = stringify( 'js', dev_scripts );
-  styles  = stringify( 'css', dev_css );
-});
-
-app.configure( function(){
-  app.set( 'views', __dirname + '/views' );
-  app.set( 'view engine', 'ejs' );
-  app.use( express.bodyParser() );
-  app.use( express.methodOverride() );
-  app.use( express.cookieParser() );
-  //app.use( express.session( { secret: 'ohlol', store: new RedisStore } ));
-  app.use( express.session( { secret: 'ohlol' } ) );
-  app.use( express.static( __dirname + '/public' ) );
-});
+scripts = stringify( 'js', dev_scripts );
+styles  = stringify( 'css', dev_css );
 
 width = 800;
 height = 400;
@@ -185,5 +158,5 @@ app.get( '/', function( req, res ) {
 	} );
 });
 
-app.listen( 3000, '127.0.0.1' );
+server.listen( 3000, '127.0.0.1' );
 //app.listen( 3000);
